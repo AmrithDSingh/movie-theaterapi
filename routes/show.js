@@ -59,6 +59,24 @@ router.get('/shows/:showId', (req, res) => {
       res.status(404).send("Show not found");
     }
 });
+router.put('/:id/rating', (req, res) => {
+  const id = req.params.id;
+  const newRating = req.body.rating.trim(); // trim whitespace from the rating
+
+  // validate the new rating
+  if (!newRating || newRating === '') {
+    return res.status(400).json({ error: 'Rating cannot be empty.' });
+  }
+
+  const index = shows.findIndex(show => show.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: 'Show not found.' });
+  }
+
+  shows[index].rating = newRating;
+  res.status(200).json({ message: 'Rating updated successfully.' });
+});
+
 router.delete("/:id", (req, res) => {
     const id = req.params.id;
     const index = showsData.findIndex((show) => show.id == id);
